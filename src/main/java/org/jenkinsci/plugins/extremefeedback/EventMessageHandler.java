@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 public class EventMessageHandler {
 
     private static final int PORT = 39418;
-    private static final Logger LOGGER = Logger.getLogger("jenkins.plugins.extremefeedback");
+    private static final Logger LOGGER = Logger.getLogger(EventMessageHandler.class.getName());
     private boolean isStarted = false;
 
     private EventMessageHandler() {}

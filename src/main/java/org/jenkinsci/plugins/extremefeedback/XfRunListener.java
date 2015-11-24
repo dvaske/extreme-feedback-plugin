@@ -49,11 +49,11 @@ public class XfRunListener extends RunListener<AbstractBuild> {
                     }
                     infoMsg.insert(0, Joiner.on(", ").join(blame) + " broke the build: ");
                     infoMsg.append(result.toString());
-                    listener.getLogger().println("[XFD] Updating Lamp display: " + infoMsg.toString());
+                    LOGGER.info("[XFD] Updating Lamp display: " + infoMsg.toString());
                 } else if (Result.ABORTED.equals(result)) {
                     String causeMsg = "BUILD ABORTED";
                     infoMsg.append(causeMsg);
-                    listener.getLogger().println("[XFD] Updating Lamp display: " + infoMsg.toString());
+                    LOGGER.info("[XFD] Updating Lamp display: " + infoMsg.toString());
                 } else {
                     infoMsg.append(result.toString());
                 }
