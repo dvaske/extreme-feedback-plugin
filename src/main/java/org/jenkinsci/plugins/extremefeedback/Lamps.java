@@ -166,6 +166,7 @@ public class Lamps extends Plugin {
     public void updateAggregateStatus(Lamp lamp) {
         if (lamp.isAggregate()) {
             Result lampResult = Result.SUCCESS;
+            boolean building = false;
             for (String lampJob : lamp.getJobs()) {
                 TopLevelItem item = Jenkins.getInstance().getItem(lampJob);
                 if (item instanceof AbstractProject) {
@@ -177,16 +178,15 @@ public class Lamps extends Plugin {
                             lastResult = Result.SUCCESS;
                         }
                     }
-                    if (job.isBuilding()){
-//                        xfEventMessage.sendColorMessage(lamp, lastResult, States.Action.FLASHING);
-                        return;
-                    }
+                    // Allow for aggregated result on building lamp
+                    building = (building? building : job.isBuilding());
+
                     if (lastResult.isWorseThan(lampResult)) {
                         lampResult = lastResult;
                     }
                 }
             }
-            xfEventMessage.sendColorMessage(lamp, lampResult, States.Action.SOLID);
+            xfEventMessage.sendColorMessage(lamp, lampResult, (building? States.Action.FLASHING : States.Action.SOLID));
         }
     }
 
@@ -260,10 +260,10 @@ public class Lamps extends Plugin {
     public void updateLampStatus(Lamp lamp) {
         if (!lamp.isInactive() && lamp.getJobs().size() > 0) {
             LOGGER.info("[XFD] Updating lamp: " + lamp.getName() + " ip: " + lamp.getIpAddress() + " jobs: " + lamp.getJobs());
-            if (lamp.isBuilding()) {
-                updateBuildingLamp(lamp);
-            } else if (lamp.isAggregate()) {
+            if (lamp.isAggregate()) {
                 updateAggregateStatus(lamp);
+            } else if (lamp.isBuilding()) {
+                updateBuildingLamp(lamp);
             } else {
                 updateLatestStatus(lamp);
             }
