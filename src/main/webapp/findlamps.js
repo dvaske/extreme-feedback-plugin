@@ -239,4 +239,33 @@ xfModule.controller('xfController', [ '$scope', function($scope) {
     $scope.write = function(text) {
         console.log(text);
     };
+
+    $scope.showTip = function(text) {
+      switch (text){
+        case "Aggregate":
+            $scope.aggregateTipIsVisible = true;
+            break;
+        case "AggregateBuilding":
+            $scope.aggregateBuildingTipIsVisible = true;
+            break;
+        case "Alarm":
+            $scope.alarmTipIsVisible = true;
+            break;
+        case "Blame":
+            $scope.blameTipIsVisible = true;
+            break;
+        case "SFX":
+            $scope.sfxTipIsVisible = true;
+            break;
+      }
+    };
+
+    $scope.hideTip = function () {
+        $scope.aggregateTipIsVisible = false;
+        $scope.aggregateBuildingTipIsVisible = false;
+        $scope.alarmTipIsVisible = false;
+        $scope.blameTipIsVisible = false;
+        $scope.sfxTipIsVisible = false;
+    };
+
 }]);

@@ -22,6 +22,7 @@ public class Lamp implements Comparable<Lamp>, Serializable {
     private boolean sfx;
     private boolean inactive;
     private boolean aggregate;
+    private boolean aggregateBuilding;
     private boolean blame;
 
     public Lamp(String macAddress, String ipAddress) {
@@ -34,7 +35,7 @@ public class Lamp implements Comparable<Lamp>, Serializable {
     }
 
     @DataBoundConstructor
-    public Lamp(String ipAddress, String macAddress, String name, String[] jobs, boolean noisy, boolean sfx, boolean inactive, boolean aggregate, boolean blame) {
+    public Lamp(String ipAddress, String macAddress, String name, String[] jobs, boolean noisy, boolean sfx, boolean inactive, boolean aggregate, boolean aggregateBuilding, boolean blame) {
         this.ipAddress = ipAddress;
         this.macAddress = macAddress;
         this.name = name;
@@ -43,6 +44,7 @@ public class Lamp implements Comparable<Lamp>, Serializable {
         this.sfx = sfx;
         this.inactive = inactive;
         this.aggregate = aggregate;
+        this.aggregateBuilding = aggregateBuilding;
         this.blame = blame;
     }
 
@@ -164,5 +166,13 @@ public class Lamp implements Comparable<Lamp>, Serializable {
             }
         }
         return false;
+    }
+
+    public boolean isAggregateBuilding() {
+        return aggregateBuilding;
+    }
+
+    public void setAggregateBuilding(boolean aggregateBuilding) {
+        this.aggregateBuilding = aggregateBuilding;
     }
 }

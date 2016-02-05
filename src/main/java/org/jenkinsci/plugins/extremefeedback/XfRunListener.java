@@ -76,7 +76,7 @@ public class XfRunListener extends RunListener<AbstractBuild> {
                         e.printStackTrace();
                     }
                 }
-                if (lamp.isAggregate()) {
+                if (lamp.isAggregate() || lamp.isAggregateBuilding()) {
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {

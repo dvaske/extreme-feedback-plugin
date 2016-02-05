@@ -87,17 +87,83 @@ l.layout(norefresh: true) {
                             th {
                                 text("Jobs Assigned To")
                             }
-                            th {
+                            th( "ng-mouseover": "showTip(\"Aggregate\")", "ng-mouseleave": "hideTip()") {
                                 text("Aggregate")
+                                br()
+                                text("results")
+                                div(class:"sg-tip", "ng-show": "aggregateTipIsVisible"){
+                                    p("The Aggregate option combines results all the jobs tied to a lamp " +
+                                            "to a single status.")
+                                    p {
+                                        text("The overall result will always be the ")
+                                        em("lowest denominator")
+                                        text(" meaning if you have 3 jobs tied to the lamp and one of the jobs is ")
+                                        em("FAILED")
+                                        text(" the lamp will show ")
+                                        em("red")
+                                        text(" as status. ")
+                                    }
+                                    p("The aggregate status show when no jobs are building")
+                                    p("If the aggregate option is off the lamp will display the result of the job that ran last.")
+                                }
                             }
-                            th {
+                            th( "ng-mouseover": "showTip(\"AggregateBuilding\")", "ng-mouseleave": "hideTip()")  {
+                                text("Aggregate")
+                                br()
+                                text("while building")
+                                div(class:"sg-tip", "ng-show": "aggregateBuildingTipIsVisible"){
+                                    p("The Aggregate while building option combines results all the jobs tied to a lamp " +
+                                            "to a single status and shows this status while tied builds are running.")
+                                    p {
+                                        text("The overall result will always be the ")
+                                        em("lowest denominator")
+                                        text(" meaning if you have 3 jobs tied to the lamp and one of the jobs is ")
+                                        em("FAILED")
+                                        text(" the lamp will show ")
+                                        em("red")
+                                        text(" as status. ")
+                                    }
+                                    p("The aggregate while building status will show the combined status when "+
+                                            "tied jobs are building")
+                                }
+                            }
+                            th ( "ng-mouseover": "showTip(\"Alarm\")", "ng-mouseleave": "hideTip()")  {
                                 text("Alarm")
+                                br()
+                                div(class:"sg-tip", "ng-show": "alarmTipIsVisible"){
+                                    p("Trigger the 'beep' alarm when a tied job is failing.")
+                                    p("The Alarm option makes a very noisy beep sound when a build fails.")
+                                }
                             }
-                            th {
+                            th ( "ng-mouseover": "showTip(\"Blame\")", "ng-mouseleave": "hideTip()")  {
                                 text("Blame")
+                                div(class:"sg-tip", "ng-show": "blameTipIsVisible"){
+                                    p("The blame option will write culprit info in the lamp's display when a build fails.")
+                                }
                             }
-                            th {
+                            th ( "ng-mouseover": "showTip(\"SFX\")", "ng-mouseleave": "hideTip()")  {
                                 text("SFX")
+                                div(class:"sg-tip", "ng-show": "sfxTipIsVisible"){
+                                    p("If the SFX option is 'on' the Lamp will play a file by random when a " +
+                                            "tied job finishes depending on the job status:")
+                                    p("The SFX sounds can be configured to some extend: wav/mp3 files can be " +
+                                            "uploaded (ssh) to lamp into the folders:")
+                                    p {
+                                        text("For builds with status: SUCCESS:")
+                                        br()
+                                        text("/home/pi/extremefeedback/XFD-Audio/Green")
+                                    }
+                                    p {
+                                        text("For builds with status: UNSTABLE:")
+                                        br()
+                                        text("/home/pi/extremefeedback/XFD-Audio/Yellow")
+                                    }
+                                    p {
+                                        text("For builds with status: FAILED:")
+                                        br()
+                                        text("/home/pi/extremefeedback/XFD-Audio/Red")
+                                    }
+                                }
                             }
                             th {
                                 text("Remove")
@@ -117,7 +183,7 @@ l.layout(norefresh: true) {
                             }
                             td {
                                 input(type: "text", "ng-model": "lamp.name", "ng-enter": "changeLamp(lamp)")
-                                img(src: "/plugin/extreme-feedback/pencil.png", "ng-click": "changeLamp(lamp)", style: "cursor: pointer;")
+                                img(src: "${rootURL}/plugin/extreme-feedback/pencil.png", "ng-click": "changeLamp(lamp)", style: "cursor: pointer;")
                             }
                             td {
                                 table(class: "jobs") {
@@ -126,7 +192,7 @@ l.layout(norefresh: true) {
                                             text("{{job}}")
                                         }
                                         td(align: "right", class: "delete") {
-                                            img(src: "/plugin/extreme-feedback/remove.png", "ng-click": "removeProjectFromLamp(job, lamp)", style: "display:none;", "ng-show": "showRemove")
+                                            img(src: "${rootURL}/plugin/extreme-feedback/remove.png", "ng-click": "removeProjectFromLamp(job, lamp)", style: "display:none;", "ng-show": "showRemove")
                                         }
                                     }
                                     tr {
@@ -140,6 +206,9 @@ l.layout(norefresh: true) {
                                 input(type: "checkbox", "ng-model": "lamp.aggregate", "ng-change": "changeLamp(lamp)")
                             }
                             td {
+                                input(type: "checkbox", "ng-model": "lamp.aggregateBuilding", "ng-change": "changeLamp(lamp)")
+                            }
+                            td {
                                 input(type: "checkbox", "ng-model": "lamp.noisy", "ng-change": "changeLamp(lamp)")
                             }
                             td {
@@ -149,7 +218,7 @@ l.layout(norefresh: true) {
                                 input(type: "checkbox", "ng-model": "lamp.sfx", "ng-change": "changeLamp(lamp)")
                             }
                             td {
-                                img(src: "/plugin/extreme-feedback/remove.png", "ng-click": "removeLamp(lamp)", style: "cursor: pointer;")
+                                img(src: "${rootURL}/plugin/extreme-feedback/remove.png", "ng-click": "removeLamp(lamp)", style: "cursor: pointer;")
                             }
                         }
                     }

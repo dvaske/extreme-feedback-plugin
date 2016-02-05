@@ -164,7 +164,7 @@ public class Lamps extends Plugin {
     }
 
     public void updateAggregateStatus(Lamp lamp) {
-        if (lamp.isAggregate()) {
+        if (lamp.isAggregate() || lamp.isAggregateBuilding()) {
             Result lampResult = Result.SUCCESS;
             boolean building = false;
             for (String lampJob : lamp.getJobs()) {
@@ -178,9 +178,11 @@ public class Lamps extends Plugin {
                             lastResult = Result.SUCCESS;
                         }
                     }
-                    // Allow for aggregated result on building lamp
-                    building = (building? building : job.isBuilding());
-
+                    if (lamp.isAggregateBuilding()) {
+                        // Allow for aggregated result on building lamp
+                        building = (building ? building : job.isBuilding());
+                        LOGGER.info("[XFD] About to update lamp: " + lamp.getName() + " result: " + lastResult + " building: " + building);
+                    }
                     if (lastResult.isWorseThan(lampResult)) {
                         lampResult = lastResult;
                     }
@@ -205,15 +207,6 @@ public class Lamps extends Plugin {
             }
         }
         xfEventMessage.sendColorMessage(lamp, lastResult, (building? States.Action.FLASHING : States.Action.SOLID));
-        if (lamp.isAggregate() && !building) {
-            // Let it blink if the lamp is aggregating the results and they differ
-            try {
-                Thread.sleep(400);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            updateAggregateStatus(lamp);
-        }
     }
 
     public Map<String, Lamp> getLampsAsMap() {
@@ -260,7 +253,7 @@ public class Lamps extends Plugin {
     public void updateLampStatus(Lamp lamp) {
         if (!lamp.isInactive() && lamp.getJobs().size() > 0) {
             LOGGER.info("[XFD] Updating lamp: " + lamp.getName() + " ip: " + lamp.getIpAddress() + " jobs: " + lamp.getJobs());
-            if (lamp.isAggregate()) {
+            if (lamp.isAggregate() || lamp.isAggregateBuilding()) {
                 updateAggregateStatus(lamp);
             } else if (lamp.isBuilding()) {
                 updateBuildingLamp(lamp);
